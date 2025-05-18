@@ -9,6 +9,7 @@ import Admissions from './pages/Admissions';
 import ProtectedRoute from './ProtectedRoute'; // Import the ProtectedRoute component
 import Academics from './pages/Academics';
 import Contact from './pages/Contact';
+import About from './pages/About';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <div className="min-h-screen">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admissions" element={<Admissions /> }/>

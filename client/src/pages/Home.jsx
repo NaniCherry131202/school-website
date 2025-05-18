@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-// Import Font Awesome
 import 'font-awesome/css/font-awesome.min.css';
+import academicsData from '../assets/academics.json';
 
 const Home = () => {
   const [notifications, setNotifications] = useState([]);
@@ -12,23 +12,23 @@ const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
+  const [showAllNotifications, setShowAllNotifications] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Fallback for local development
+  const events = academicsData.events;
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedRole = localStorage.getItem('role');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    if (storedRole) {
-      setRole(storedRole);
-    }
+    if (storedUser) setUser(JSON.parse(storedUser));
+    if (storedRole) setRole(storedRole);
 
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/notifications`);
-        setNotifications(response.data);
+        // Sort notifications by date in descending order (newest first)
+        const sortedNotifications = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setNotifications(sortedNotifications);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch notifications');
       } finally {
@@ -47,12 +47,14 @@ const Home = () => {
     window.location.href = '/';
   };
 
+  // Show only the latest 3 notifications initially, or all if "View All" is clicked
+  const displayedNotifications = showAllNotifications ? notifications : notifications.slice(0, 3);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 text-gray-800">
       {/* Header */}
-      <header className="w-full bg-gradient-to-r from-indigo-600 to-purple-700 text-white py-2 fixed top-0 z-50 shadow-lg">
+      <header className="w-full bg-gradient-to-r from-yellow-300 to-orange-600 text-white py-2 fixed top-0 z-50 shadow-lg">
         <div className="container mx-auto flex justify-between items-center px-4">
-          {/* Logo */}
           <motion.img
             src="/logo.png"
             alt="Ashoka Vidya Mandir Logo"
@@ -61,7 +63,6 @@ const Home = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           />
-
           {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-6 text-sm md:text-base font-semibold items-center">
             <motion.div whileHover={{ scale: 1.1 }}>
@@ -76,7 +77,6 @@ const Home = () => {
             <motion.div whileHover={{ scale: 1.1 }}>
               <Link to="/contact" className="hover:text-indigo-200">Contact</Link>
             </motion.div>
-            {/* Role-Based Dashboard Link */}
             {role === 'student' && (
               <motion.div whileHover={{ scale: 1.1 }}>
                 <Link to="/student" className="hover:text-indigo-200">Dashboard</Link>
@@ -122,7 +122,6 @@ const Home = () => {
               </>
             )}
           </nav>
-
           {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white focus:outline-none"
@@ -137,7 +136,6 @@ const Home = () => {
             </svg>
           </button>
         </div>
-
         {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.nav
@@ -184,7 +182,7 @@ const Home = () => {
         {/* Hero Section */}
         <section
           className="relative flex items-center justify-center h-screen bg-cover bg-center"
-          style={{ backgroundImage: "url('/home/campus.jpg')" }}
+          style={{ backgroundImage: "url('/main.jpg')" }}
         >
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="relative z-10 text-center text-white px-4">
@@ -202,71 +200,125 @@ const Home = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Empowering Education in Hyderabad Since 1990
+              The Right steps will always lead you to Success
             </motion.p>
-            <Link to="/admissions">
+            <Link to="/academics">
               <motion.button
-                className="px-6 py-3 md:px-8 md:py-4 bg-indigo-600 text-white font-semibold rounded-full shadow-lg hover:bg-indigo-700 text-lg"
+                className="px-6 py-3 md:px-8 md:py-4 bg-orange-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-500 text-lg"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                Apply Now
+                Enroll
               </motion.button>
             </Link>
           </div>
         </section>
 
-        {/* About Section */}
+        {/* Notifications & Our Endeavours Side-by-Side */}
         <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 text-center">
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold mb-6 text-gray-800"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              About Us
-            </motion.h2>
-            <motion.p
-              className="text-lg md:text-xl text-gray-600 mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              At Ashoka Vidya Mandir, we believe in holistic education that nurtures the mind, body, and soul. Established in 1990, our school has been a beacon of excellence in education, empowering students to achieve their full potential.
-            </motion.p>
-
-            {/* Mission, Vision, and Values */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-              <motion.div
-                className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                whileHover={{ scale: 1.05 }}
-              >
-                <h3 className="text-xl font-semibold text-indigo-600 mb-4">Our Mission</h3>
-                <p className="text-gray-600">
-                  To provide a nurturing environment where students can excel academically, socially, and emotionally, preparing them for a successful future.
-                </p>
-              </motion.div>
-
-              <motion.div
-                className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                whileHover={{ scale: 1.05 }}
-              >
-                <h3 className="text-xl font-semibold text-indigo-600 mb-4">Our Vision</h3>
-                <p className="text-gray-600">
-                  To be a leading institution that inspires innovation, fosters creativity, and cultivates a passion for lifelong learning.
-                </p>
-              </motion.div>
-
-              <motion.div
-                className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                whileHover={{ scale: 1.05 }}
-              >
-                <h3 className="text-xl font-semibold text-indigo-600 mb-4">Our Values</h3>
-                <p className="text-gray-600">
-                  Integrity, respect, excellence, and inclusivity are at the core of everything we do, shaping the leaders of tomorrow.
-                </p>
-              </motion.div>
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Notifications Sidebar */}
+              <div className="lg:w-1/3 w-full">
+                <motion.h2
+                  className="text-2xl md:text-3xl font-bold mb-6 text-gray-800"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  Notifications
+                </motion.h2>
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-orange-600"></div>
+                  </div>
+                ) : error ? (
+                  <p className="text-center text-red-600 bg-red-100 p-4 rounded-lg">{error}</p>
+                ) : notifications.length === 0 ? (
+                  <p className="text-center text-gray-600 bg-gray-100 p-4 rounded-lg">No notifications available.</p>
+                ) : (
+                  <>
+                    <div className="space-y-4">
+                      {displayedNotifications.map((notification) => (
+                        <motion.div
+                          key={notification._id}
+                          className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300"
+                          whileHover={{ scale: 1.02 }}
+                        >
+                          <div className="flex items-start space-x-3">
+                            <div className="text-center">
+                              <p className="text-sm font-semibold text-gray-600 uppercase">
+                                {new Date(notification.date).toLocaleString('default', { month: 'short' })}
+                              </p>
+                              <p className="text-xl font-bold text-gray-800">
+                                {new Date(notification.date).getDate().toString().padStart(2, '0')}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {new Date(notification.date).getFullYear()}
+                              </p>
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-2">
+                                <i className="fa fa-bell text-orange-600 text-lg"></i>
+                                <h3 className="text-lg font-semibold text-red-600">
+                                  {notification.title || 'Notification'}
+                                </h3>
+                              </div>
+                              <p className="text-sm text-gray-500 mt-1">Academics</p>
+                              <p className="text-gray-600 text-sm mt-1">{notification.text}</p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                    {notifications.length > 3 && (
+                      <div className="mt-6 text-center">
+                        <motion.button
+                          onClick={() => setShowAllNotifications(!showAllNotifications)}
+                          className="px-6 py-2 bg-transparent text-red-600 border-2 border-red-600 font-semibold rounded-full hover:bg-red-600 hover:text-white transition-colors duration-300"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          {showAllNotifications ? 'Show Less' : 'View All'}
+                        </motion.button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+              {/* Our Endeavours */}
+              <div className="lg:w-2/3 w-full">
+                <motion.h2
+                  className="text-2xl md:text-3xl font-bold mb-6 text-gray-800"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  Our Endeavours
+                </motion.h2>
+                {events.length === 0 ? (
+                  <p className="text-center text-gray-600 bg-gray-100 p-4 rounded-lg">No events available.</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {events.map((event) => (
+                      <motion.div
+                        key={event.id}
+                        className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                        whileHover={{ scale: 1.03 }}
+                      >
+                        <div className="relative w-full h-64">
+                          <img
+                            src={event.image}
+                            alt={event.title}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                       
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </section>
@@ -288,54 +340,17 @@ const Home = () => {
                 <h3 className="text-xl font-semibold mb-2">Classrooms</h3>
                 <p className="text-gray-600">Modern classrooms with advanced tech to enhance learning.</p>
               </motion.div>
-
               <motion.div className="bg-white rounded-lg shadow-lg p-6 text-center" whileHover={{ scale: 1.05 }}>
                 <img src="/home/playground.jpg" alt="Playground" className="w-full h-40 object-cover rounded-md mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Playground</h3>
                 <p className="text-gray-600">Spacious and safe area for physical activity and games.</p>
               </motion.div>
-
               <motion.div className="bg-white rounded-lg shadow-lg p-6 text-center" whileHover={{ scale: 1.05 }}>
                 <img src="/home/library.jpg" alt="Library" className="w-full h-40 object-cover rounded-md mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Library</h3>
                 <p className="text-gray-600">Well-stocked library with books and resources for all.</p>
               </motion.div>
             </div>
-          </div>
-        </section>
-
-        {/* Notifications Section */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-800"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              Notifications
-            </motion.h2>
-            {loading ? (
-              <p className="text-center text-gray-600">Loading notifications...</p>
-            ) : error ? (
-              <p className="text-center text-red-600">{error}</p>
-            ) : notifications.length === 0 ? (
-              <p className="text-center text-gray-600">No notifications available.</p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {notifications.map((notification) => (
-                  <motion.div
-                    key={notification._id}
-                    className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <h3 className="text-xl font-semibold text-indigo-600 mb-2">Notification</h3>
-                    <p className="text-gray-600">{notification.text}</p>
-                    <p className="text-sm text-gray-500 mt-2">{new Date(notification.date).toLocaleString()}</p>
-                  </motion.div>
-                ))}
-              </div>
-            )}
           </div>
         </section>
       </main>

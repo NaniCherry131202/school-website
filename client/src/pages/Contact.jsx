@@ -22,13 +22,13 @@ const Contact = () => {
             className="flex items-center bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             whileHover={{ scale: 1.05 }}
           >
-            <a href="tel:+1234567890" className="flex items-center">
+            <a href="tel:+91 9505221394" className="flex items-center">
               <div className="flex items-center justify-center w-12 h-12 bg-indigo-600 text-white rounded-full">
                 <i className="fas fa-phone-alt"></i>
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-800">Phone</h3>
-                <p className="text-gray-600">+1 234 567 890</p>
+                <p className="text-gray-600">+91 9505221394</p>
               </div>
             </a>
           </motion.div>
@@ -38,13 +38,13 @@ const Contact = () => {
             className="flex items-center bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
             whileHover={{ scale: 1.05 }}
           >
-            <a href="mailto:contact@schoolwebsite.com" className="flex items-center">
+            <a href="mailto:nareena@ashokavidyamandir.com" className="flex items-center">
               <div className="flex items-center justify-center w-12 h-12 bg-indigo-600 text-white rounded-full">
                 <i className="fas fa-envelope"></i>
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-800">Email</h3>
-                <p className="text-gray-600">contact@schoolwebsite.com</p>
+                <p className="text-gray-600">nareena@ashokavidyamandir.com</p>
               </div>
             </a>
           </motion.div>
@@ -55,7 +55,7 @@ const Contact = () => {
             whileHover={{ scale: 1.05 }}
           >
             <a
-              href="https://www.google.com/maps?q=123+Main+Street,+Hyderabad,+India"
+              href="https://maps.app.goo.gl/Ckf6fcve5sukqFJUA"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center"
@@ -65,7 +65,7 @@ const Contact = () => {
               </div>
               <div className="ml-4">
                 <h3 className="text-lg font-semibold text-gray-800">Address</h3>
-                <p className="text-gray-600">123 Main Street, Hyderabad, India</p>
+                <p className="text-gray-600">20-269/1A, Indira Nagar B, Gajularamaram, Hyderabad - 500055</p>
               </div>
             </a>
           </motion.div>
@@ -82,20 +82,12 @@ const Contact = () => {
               <h3 className="text-lg font-semibold text-gray-800">Follow Us</h3>
               <div className="flex space-x-4 mt-2">
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/profile.php?id=61576177360899 "
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-indigo-600 hover:text-indigo-800"
                 >
                   <i className="fab fa-facebook-f"></i>
-                </a>
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-indigo-600 hover:text-indigo-800"
-                >
-                  <i className="fab fa-twitter"></i>
                 </a>
                 <a
                   href="https://instagram.com"
@@ -111,7 +103,7 @@ const Contact = () => {
                   rel="noopener noreferrer"
                   className="text-indigo-600 hover:text-indigo-800"
                 >
-                  <i className="fab fa-linkedin-in"></i>
+                  <i className="fab fa-youtube"></i>
                 </a>
               </div>
             </div>

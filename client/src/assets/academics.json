@@ -73,6 +73,39 @@
         "description": "Track and field events to encourage overall physical development and sportsmanship.",
         "icon": "/sports/athletics.jpg"
       }
-    ]
+    ],
+    "events": [
+    {
+      "id": 1,
+      "title": "Annual Sports Day",
+      "image": "/events/event1.jpg"
+    },
+    {
+      "id": 2,
+      "title": "Science Exhibition",
+      "image": "/events/event2.jpg"
+    },
+    {
+      "id": 3,
+      "title": "Cultural Fest",
+      "image": "/events/event3.jpg"
+    },
+    {
+      "id": 4,
+      "title": "Art Workshop",
+      "image": "/events/event4.jpg"
+    },
+    {
+      "id": 5,
+      "title": "Inter-School Debate Competition",
+      "image": "/events/event5.jpg"
+    },
+    {
+      "id": 6,
+      "title": "Annual Day Celebration",
+      "image": "/events/event6.jpg"
+    }
+    
+  ]
   }
   
