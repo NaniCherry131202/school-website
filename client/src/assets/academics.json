@@ -1,0 +1,78 @@
+{
+    "head": {
+      "name": "Dr. Ramesh Gupta",
+      "photo": "/faculty/head.jpg",
+      "description": "Dr. Ramesh Gupta, the Academic Head, has over 20 years of experience in educational leadership. He is dedicated to fostering a culture of excellence and innovation in academics."
+    },
+    "faculty": [
+      {
+        "name": "Dr. Asha Sharma",
+        "photo": "/faculty/maths.jpg",
+        "department": "Mathematics",
+        "description": "Dr. Asha Sharma has over 15 years of experience teaching advanced mathematics and mentoring students for competitive exams."
+      },
+      {
+        "name": "Mr. Rajesh Kumar",
+        "photo": "/faculty/science.jpg",
+        "department": "Science",
+        "description": "Mr. Rajesh Kumar specializes in Physics and Chemistry, focusing on hands-on experiments and research-based learning."
+      },
+      {
+        "name": "Ms. Priya Verma",
+        "photo": "/faculty/english.jpeg",
+        "department": "English",
+        "description": "Ms. Priya Verma is an expert in English literature and language, fostering critical thinking and communication skills."
+      },
+      {
+        "name": "Mrs. Kavita Singh",
+        "photo": "/faculty/social.avif",
+        "department": "Social Studies",
+        "description": "Mrs. Kavita Singh brings history and geography to life with her engaging teaching methods and interactive lessons."
+      }
+    ],
+    "activities": [
+      {
+        "name": "Art & Craft",
+        "description": "Encouraging creativity and self-expression through various art and craft activities.",
+        "icon": "/activities/art.jpg"
+      },
+      {
+        "name": "Music & Dance",
+        "description": "Providing opportunities to learn and perform music and dance, fostering cultural appreciation.",
+        "icon": "/activities/music and dance.webp"
+      },
+      {
+        "name": "Drama Club",
+        "description": "Developing confidence and communication skills through theatrical performances.",
+        "icon": "/activities/drama.webp"
+      },
+      {
+        "name": "Debate & Public Speaking",
+        "description": "Enhancing critical thinking and communication skills through debates and public speaking events.",
+        "icon": "/activities/speaking.jpg"
+      }
+    ],
+    "sports": [
+      {
+        "name": "Cricket",
+        "description": "Our cricket team participates in inter-school tournaments and fosters teamwork and discipline.",
+        "icon": "/sports/cricket.jpg"
+      },
+      {
+        "name": "Football",
+        "description": "Football coaching and matches to promote physical fitness and team spirit.",
+        "icon": "/sports/football.webp"
+      },
+      {
+        "name": "Basketball",
+        "description": "Basketball training sessions and competitions to develop agility and coordination.",
+        "icon": "/sports/basketball.jpg"
+      },
+      {
+        "name": "Athletics",
+        "description": "Track and field events to encourage overall physical development and sportsmanship.",
+        "icon": "/sports/athletics.jpg"
+      }
+    ]
+  }
+  
