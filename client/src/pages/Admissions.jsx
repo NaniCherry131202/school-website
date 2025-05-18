@@ -11,10 +11,12 @@ const Admissions = () => {
     phone: '',
     dob: '',
     address: '',
-    class: '', // New field for class
+    class: '',
     photo: null,
     aadhar: null,
   });
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Fallback for local development
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,13 +47,13 @@ const Admissions = () => {
     submissionData.append('phone', formData.phone);
     submissionData.append('dob', formData.dob);
     submissionData.append('address', formData.address);
-    submissionData.append('class', formData.class); // Include class in submission
+    submissionData.append('class', formData.class);
     submissionData.append('photo', formData.photo);
     submissionData.append('aadhar', formData.aadhar);
 
     try {
       // Send form data to the backend
-      const response = await axios.post('http://localhost:5000/api/admissions', submissionData, {
+      const response = await axios.post(`${API_URL}/api/admissions`, submissionData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -74,9 +76,13 @@ const Admissions = () => {
         photo: null,
         aadhar: null,
       });
+
+      // Reset file inputs
+      document.getElementById('photo').value = '';
+      document.getElementById('aadhar').value = '';
     } catch (error) {
       console.error('Error submitting application:', error);
-      toast.error('An error occurred while submitting your application. Please try again.', {
+      toast.error(error.response?.data?.message || 'An error occurred while submitting your application. Please try again.', {
         position: 'top-right',
         autoClose: 3000,
       });
@@ -198,6 +204,7 @@ const Admissions = () => {
             <label className="block text-gray-700 font-semibold mb-2">Upload Photo</label>
             <input
               type="file"
+              id="photo"
               name="photo"
               accept="image/*"
               onChange={handleFileChange}
@@ -211,6 +218,7 @@ const Admissions = () => {
             <label className="block text-gray-700 font-semibold mb-2">Upload Aadhaar Card</label>
             <input
               type="file"
+              id="aadhar"
               name="aadhar"
               accept="application/pdf,image/*"
               onChange={handleFileChange}

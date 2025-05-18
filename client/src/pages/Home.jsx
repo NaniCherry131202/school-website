@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+// Import Font Awesome
+import 'font-awesome/css/font-awesome.min.css';
 
 const Home = () => {
   const [notifications, setNotifications] = useState([]);
@@ -9,6 +12,8 @@ const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Fallback for local development
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -22,12 +27,10 @@ const Home = () => {
 
     const fetchNotifications = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/notifications');
-        if (!response.ok) throw new Error('Failed to fetch notifications');
-        const data = await response.json();
-        setNotifications(data);
+        const response = await axios.get(`${API_URL}/api/notifications`);
+        setNotifications(response.data);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || 'Failed to fetch notifications');
       } finally {
         setLoading(false);
       }
@@ -134,6 +137,46 @@ const Home = () => {
             </svg>
           </button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <motion.nav
+            className="md:hidden bg-indigo-600 text-white p-4"
+            initial={{ height: 0 }}
+            animate={{ height: 'auto' }}
+            transition={{ duration: 0.3 }}
+          >
+            <Link to="/about" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>About Us</Link>
+            <Link to="/academics" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Academics</Link>
+            <Link to="/admissions" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Admissions</Link>
+            <Link to="/contact" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+            {role === 'student' && (
+              <Link to="/student" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+            )}
+            {role === 'teacher' && (
+              <Link to="/teacher" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+            )}
+            {role === 'admin' && (
+              <Link to="/admin" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+            )}
+            {user ? (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                className="block py-2 text-red-200 hover:underline w-full text-left"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link to="/login" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Login</Link>
+                <Link to="/register" className="block py-2 hover:text-indigo-200" onClick={() => setIsMenuOpen(false)}>Register</Link>
+              </>
+            )}
+          </motion.nav>
+        )}
       </header>
 
       {/* Main Content */}
@@ -260,6 +303,41 @@ const Home = () => {
             </div>
           </div>
         </section>
+
+        {/* Notifications Section */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.h2
+              className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-800"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              Notifications
+            </motion.h2>
+            {loading ? (
+              <p className="text-center text-gray-600">Loading notifications...</p>
+            ) : error ? (
+              <p className="text-center text-red-600">{error}</p>
+            ) : notifications.length === 0 ? (
+              <p className="text-center text-gray-600">No notifications available.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {notifications.map((notification) => (
+                  <motion.div
+                    key={notification._id}
+                    className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <h3 className="text-xl font-semibold text-indigo-600 mb-2">Notification</h3>
+                    <p className="text-gray-600">{notification.text}</p>
+                    <p className="text-sm text-gray-500 mt-2">{new Date(notification.date).toLocaleString()}</p>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
@@ -273,7 +351,7 @@ const Home = () => {
               rel="noopener noreferrer"
               className="hover:text-indigo-200"
             >
-              <i className="fab fa-facebook-f text-xl"></i>
+              <i className="fa fa-facebook-f text-xl"></i>
             </a>
             <a
               href="https://twitter.com"
@@ -281,7 +359,7 @@ const Home = () => {
               rel="noopener noreferrer"
               className="hover:text-indigo-200"
             >
-              <i className="fab fa-twitter text-xl"></i>
+              <i className="fa fa-twitter text-xl"></i>
             </a>
             <a
               href="https://instagram.com"
@@ -289,7 +367,7 @@ const Home = () => {
               rel="noopener noreferrer"
               className="hover:text-indigo-200"
             >
-              <i className="fab fa-instagram text-xl"></i>
+              <i className="fa fa-instagram text-xl"></i>
             </a>
             <a
               href="https://linkedin.com"
@@ -297,7 +375,7 @@ const Home = () => {
               rel="noopener noreferrer"
               className="hover:text-indigo-200"
             >
-              <i className="fab fa-linkedin-in text-xl"></i>
+              <i className="fa fa-linkedin text-xl"></i>
             </a>
           </div>
         </div>

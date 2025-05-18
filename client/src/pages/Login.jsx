@@ -1,18 +1,22 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Fallback for local development
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null); // Reset error state
     try {
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      
+      const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password });
+
       // Save full user info
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
@@ -25,7 +29,7 @@ function Login() {
       else if (data.role === 'visit') navigate('/'); // Redirect "Visit" role to homepage
     } catch (err) {
       console.error(err);
-      alert('Invalid credentials');
+      setError(err.response?.data?.message || 'Invalid credentials');
     }
   };
 
@@ -39,6 +43,7 @@ function Login() {
       >
         <img src="/logo.png" alt="Ashoka Vidya Mandir Logo" className="w-24 mx-auto mb-6" />
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+        {error && <p className="text-red-600 text-center mb-4">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label className="block text-gray-700">Email</label>
@@ -46,7 +51,7 @@ function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               required
             />
           </div>
@@ -56,7 +61,7 @@ function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               required
             />
           </div>

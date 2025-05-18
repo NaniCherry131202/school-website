@@ -1,5 +1,3 @@
-// Updated AdminDashboard.jsx with image rendering in PDF and user management section
-
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -17,6 +15,7 @@ function AdminDashboard() {
   const [error, setError] = useState(null);
 
   const admissionRefs = useRef({});
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Fallback for local development
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,9 +29,9 @@ function AdminDashboard() {
       try {
         const headers = { Authorization: `Bearer ${token}` };
         const [usersResponse, notificationsResponse, admissionsResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/admin/users", { headers }),
-          axios.get("http://localhost:5000/api/notifications", { headers }),
-          axios.get("http://localhost:5000/api/admissions", { headers })
+          axios.get(`${API_URL}/api/admin/users`, { headers }),
+          axios.get(`${API_URL}/api/notifications`, { headers }),
+          axios.get(`${API_URL}/api/admissions`, { headers }),
         ]);
 
         setUsers(usersResponse.data);
@@ -50,7 +49,7 @@ function AdminDashboard() {
   const handleDeleteUser = async (id) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:5000/api/admin/user/${id}`, {
+      await axios.delete(`${API_URL}/api/admin/user/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(users.filter((user) => user._id !== id));
@@ -66,7 +65,7 @@ function AdminDashboard() {
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/notifications',
+        `${API_URL}/api/notifications`,
         { text: newNotification },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -80,7 +79,7 @@ function AdminDashboard() {
   const handleDeleteNotification = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:5000/api/notifications/${id}`, {
+      await axios.delete(`${API_URL}/api/notifications/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotifications(notifications.filter(n => n._id !== id));
@@ -119,7 +118,7 @@ function AdminDashboard() {
                 <h3 className="text-lg font-semibold text-gray-800">Notification</h3>
                 <p className="text-gray-600">{notification.text}</p>
                 <p className="text-sm text-gray-500 mt-1">{new Date(notification.date).toLocaleString()}</p>
-                <button onClick={() => handleDeleteNotification(notification._id)} className="absolute top-2 right-2 text-red-600">&times;</button>
+                <button onClick={() => handleDeleteNotification(notification._id)} className="absolute top-2 right-2 text-red-600">×</button>
               </li>
             ))}
           </ul>
@@ -186,75 +185,94 @@ function AdminDashboard() {
 
           {/* Users Table */}
           <h3 className="text-xl font-semibold mb-4">Manage Users</h3>
-          <table className="w-full border mb-6">
-            <thead>
-              <tr className="bg-blue-600 text-white">
-                <th className="p-2">Name</th>
-                <th className="p-2">Email</th>
-                <th className="p-2">Role</th>
-                <th className="p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map(user => (
-                <tr key={user._id} className="border-b">
-                  <td className="p-2">{user.name}</td>
-                  <td className="p-2">{user.email}</td>
-                  <td className="p-2 capitalize">{user.role}</td>
-                  <td className="p-2">
-                    <button
-                      onClick={() => handleDeleteUser(user._id)}
-                      className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {error && <p className="text-red-600 mb-4">{error}</p>}
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <>
+              <table className="w-full border mb-6">
+                <thead>
+                  <tr className="bg-blue-600 text-white">
+                    <th className="p-2">Name</th>
+                    <th className="p-2">Email</th>
+                    <th className="p-2">Role</th>
+                    <th className="p-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" className="p-2 text-center">No users found</td>
+                    </tr>
+                  ) : (
+                    filteredUsers.map(user => (
+                      <tr key={user._id} className="border-b">
+                        <td className="p-2">{user.name}</td>
+                        <td className="p-2">{user.email}</td>
+                        <td className="p-2 capitalize">{user.role}</td>
+                        <td className="p-2">
+                          <button
+                            onClick={() => handleDeleteUser(user._id)}
+                            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
 
-          {/* Admissions Table */}
-          <h3 className="text-xl font-semibold mb-4">Admission Applications</h3>
-          <table className="w-full border">
-            <thead>
-              <tr className="bg-green-600 text-white">
-                <th className="p-2">Name</th>
-                <th className="p-2">Email</th>
-                <th className="p-2">Phone</th>
-                <th className="p-2">DOB</th>
-                <th className="p-2">Class</th>
-                <th className="p-2">Photo</th>
-                <th className="p-2">Aadhar</th>
-                <th className="p-2">PDF</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAdmissions.map(admission => (
-                <tr key={admission._id} ref={el => admissionRefs.current[admission._id] = el} className="border-b">
-                  <td className="p-2">{admission.name}</td>
-                  <td className="p-2">{admission.email}</td>
-                  <td className="p-2">{admission.phone}</td>
-                  <td className="p-2">{new Date(admission.dob).toLocaleDateString()}</td>
-                  <td className="p-2">{admission.class}</td>
-                  <td className="p-2">
-                    <img src={`http://localhost:5000/${admission.photo}`} alt="Photo" className="h-16" />
-                  </td>
-                  <td className="p-2">
-                    <img src={`http://localhost:5000/${admission.aadhar}`} alt="Aadhar" className="h-16" />
-                  </td>
-                  <td className="p-2">
-                    <button
-                      onClick={() => handleDownloadPDF(admission._id)}
-                      className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
-                    >
-                      Download
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              {/* Admissions Table */}
+              <h3 className="text-xl font-semibold mb-4">Admission Applications</h3>
+              <table className="w-full border">
+                <thead>
+                  <tr className="bg-green-600 text-white">
+                    <th className="p-2">Name</th>
+                    <th className="p-2">Email</th>
+                    <th className="p-2">Phone</th>
+                    <th className="p-2">DOB</th>
+                    <th className="p-2">Class</th>
+                    <th className="p-2">Photo</th>
+                    <th className="p-2">Aadhar</th>
+                    <th className="p-2">PDF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredAdmissions.length === 0 ? (
+                    <tr>
+                      <td colSpan="8" className="p-2 text-center">No admissions found</td>
+                    </tr>
+                  ) : (
+                    filteredAdmissions.map(admission => (
+                      <tr key={admission._id} ref={el => admissionRefs.current[admission._id] = el} className="border-b">
+                        <td className="p-2">{admission.name}</td>
+                        <td className="p-2">{admission.email}</td>
+                        <td className="p-2">{admission.phone}</td>
+                        <td className="p-2">{new Date(admission.dob).toLocaleDateString()}</td>
+                        <td className="p-2">{admission.class}</td>
+                        <td className="p-2">
+                          <img src={`${API_URL}/${admission.photo}`} alt="Photo" className="h-16" />
+                        </td>
+                        <td className="p-2">
+                          <img src={`${API_URL}/${admission.aadhar}`} alt="Aadhar" className="h-16" />
+                        </td>
+                        <td className="p-2">
+                          <button
+                            onClick={() => handleDownloadPDF(admission._id)}
+                            className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+                          >
+                            Download
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </>
+          )}
         </motion.div>
       </main>
     </div>
