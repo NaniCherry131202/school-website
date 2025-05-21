@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import AdmissionPopup from './AdmissionPopup';
 import 'font-awesome/css/font-awesome.min.css';
 import academicsData from '../assets/academics.json';
 
@@ -202,7 +203,7 @@ const Home = () => {
             >
               The Right steps will always lead you to Success
             </motion.p>
-            <Link to="/academics">
+            <Link to="/admissions">
               <motion.button
                 className="px-6 py-3 md:px-8 md:py-4 bg-orange-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-500 text-lg"
                 whileHover={{ scale: 1.1 }}
@@ -213,7 +214,7 @@ const Home = () => {
             </Link>
           </div>
         </section>
-
+       <AdmissionPopup />
         {/* Notifications & Our Endeavours Side-by-Side */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
