@@ -343,14 +343,14 @@ const Home = () => {
                 <p className="text-gray-600">Modern classrooms with advanced tech to enhance learning.</p>
               </motion.div>
               <motion.div className="bg-white rounded-lg shadow-lg p-6 text-center" whileHover={{ scale: 1.05 }}>
-                <img src="/home/playground.jpg" alt="Playground" className="w-full h-40 object-cover rounded-md mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Playground</h3>
-                <p className="text-gray-600">Spacious and safe area for physical activity and games.</p>
+                <img src="/home/playarea.jpg" alt="Playground" className="w-full h-40 object-cover rounded-md mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Play Area</h3>
+                <p className="text-gray-600">Safe area for physical activities</p>
               </motion.div>
               <motion.div className="bg-white rounded-lg shadow-lg p-6 text-center" whileHover={{ scale: 1.05 }}>
-                <img src="/home/library.jpg" alt="Library" className="w-full h-40 object-cover rounded-md mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Library</h3>
-                <p className="text-gray-600">Well-stocked library with books and resources for all.</p>
+                <img src="/home/computerlearn.jpg" alt="Computer" className="w-full h-40 object-cover rounded-md mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Computer Learning</h3>
+                <p className="text-gray-600">Future coders Start from here!</p>
               </motion.div>
             </div>
           </div>
