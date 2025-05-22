@@ -7,7 +7,11 @@ import html2canvas from 'html2canvas';
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [newNotification, setNewNotification] = useState('');
+  const [newNotification, setNewNotification] = useState({
+    name: '',
+    description: '',
+    link: ''
+  });
   const [roleFilter, setRoleFilter] = useState('all');
   const [admissions, setAdmissions] = useState([]);
   const [classFilter, setClassFilter] = useState('all');
@@ -15,7 +19,7 @@ function AdminDashboard() {
   const [error, setError] = useState(null);
 
   const admissionRefs = useRef({});
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Fallback for local development
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +34,7 @@ function AdminDashboard() {
         const headers = { Authorization: `Bearer ${token}` };
         const [usersResponse, notificationsResponse, admissionsResponse] = await Promise.all([
           axios.get(`${API_URL}/api/admin/users`, { headers }),
-          axios.get(`${API_URL}/api/notifications`, { headers }),
+          axios.get(`${API_URL}/api/notifications`), // Removed headers since endpoint is public
           axios.get(`${API_URL}/api/admissions`, { headers }),
         ]);
 
@@ -38,7 +42,8 @@ function AdminDashboard() {
         setNotifications(notificationsResponse.data);
         setAdmissions(admissionsResponse.data);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch data");
+        console.error('Fetch data error:', err.response?.data, err);
+        setError(err.response?.data?.details || err.response?.data?.message || 'Failed to fetch data');
       } finally {
         setLoading(false);
       }
@@ -61,16 +66,21 @@ function AdminDashboard() {
   const handleAddNotification = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    if (!newNotification.trim()) return;
+    const { name, description } = newNotification;
+    if (!name.trim() || !description.trim()) {
+      setError('Name and description are required');
+      return;
+    }
 
     try {
       const response = await axios.post(
         `${API_URL}/api/notifications`,
-        { text: newNotification },
+        newNotification,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setNotifications([response.data, ...notifications]);
-      setNewNotification('');
+      setNewNotification({ name: '', description: '', link: '' });
+      setError(null);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add notification');
     }
@@ -103,9 +113,9 @@ function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
-      {/* Notifications Sidebar */}
       <aside className="w-1/4 bg-white shadow-lg p-4 h-screen overflow-y-auto">
         <h2 className="text-xl font-bold text-indigo-600 mb-4">Notifications</h2>
+        {error && <p className="text-red-600 mb-4">{error}</p>}
         {notifications.length === 0 ? (
           <p className="text-gray-600">No notifications available.</p>
         ) : (
@@ -115,34 +125,68 @@ function AdminDashboard() {
                 key={notification._id}
                 className="bg-gray-100 p-3 rounded-lg shadow-md relative"
               >
-                <h3 className="text-lg font-semibold text-gray-800">Notification</h3>
-                <p className="text-gray-600">{notification.text}</p>
+                <h3 className="text-lg font-semibold text-gray-800">{notification.name}</h3>
+                <p className="text-gray-600">{notification.description}</p>
+                {notification.link && (
+                  <a
+                    href={notification.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline text-sm"
+                  >
+                    {notification.link}
+                  </a>
+                )}
                 <p className="text-sm text-gray-500 mt-1">{new Date(notification.date).toLocaleString()}</p>
-                <button onClick={() => handleDeleteNotification(notification._id)} className="absolute top-2 right-2 text-red-600">×</button>
+                <button
+                  onClick={() => handleDeleteNotification(notification._id)}
+                  className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                >
+                  ×
+                </button>
               </li>
             ))}
           </ul>
         )}
-
-        {/* Add Notification Form */}
-        <form onSubmit={handleAddNotification} className="mt-6">
-          <input
-            type="text"
-            value={newNotification}
-            onChange={(e) => setNewNotification(e.target.value)}
-            placeholder="Enter new notification"
-            className="border rounded px-3 py-1 w-full mb-2"
-          />
+        <form onSubmit={handleAddNotification} className="mt-6 space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Notification Title</label>
+            <input
+              type="text"
+              value={newNotification.name}
+              onChange={(e) => setNewNotification({ ...newNotification, name: e.target.value })}
+              placeholder="Enter notification title"
+              className="border rounded px-3 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              value={newNotification.description}
+              onChange={(e) => setNewNotification({ ...newNotification, description: e.target.value })}
+              placeholder="Enter notification description"
+              className="border rounded px-3 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
+              rows="3"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Link (optional)</label>
+            <input
+              type="url"
+              value={newNotification.link}
+              onChange={(e) => setNewNotification({ ...newNotification, link: e.target.value })}
+              placeholder="Enter a URL (optional)"
+              className="border rounded px-3 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-600"
+            />
+          </div>
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 w-full"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
           >
             Add Notification
           </button>
         </form>
       </aside>
-
-      {/* Main Dashboard Content */}
       <main className="w-3/4 p-6">
         <motion.div
           className="bg-white p-6 rounded-lg shadow-lg"
@@ -151,8 +195,6 @@ function AdminDashboard() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-2xl font-bold text-center mb-6">Admin Dashboard</h2>
-
-          {/* Filters */}
           <div className="flex justify-between mb-4">
             <div>
               <label className="font-semibold mr-2">Filter by Role:</label>
@@ -167,7 +209,6 @@ function AdminDashboard() {
                 <option value="admin">Admin</option>
               </select>
             </div>
-
             <div>
               <label className="font-semibold mr-2">Filter by Class:</label>
               <select
@@ -182,10 +223,8 @@ function AdminDashboard() {
               </select>
             </div>
           </div>
-
-          {/* Users Table */}
           <h3 className="text-xl font-semibold mb-4">Manage Users</h3>
-          {error && <p className="text-red-600 mb-4">{error}</p>}
+          {error && !notifications.length && <p className="text-red-600 mb-4">{error}</p>}
           {loading ? (
             <p>Loading...</p>
           ) : (
@@ -223,8 +262,6 @@ function AdminDashboard() {
                   )}
                 </tbody>
               </table>
-
-              {/* Admissions Table */}
               <h3 className="text-xl font-semibold mb-4">Admission Applications</h3>
               <table className="w-full border">
                 <thead>

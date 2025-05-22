@@ -27,11 +27,11 @@ const Home = () => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/notifications`);
-        // Sort notifications by date in descending order (newest first)
         const sortedNotifications = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setNotifications(sortedNotifications);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch notifications');
+        console.error('Fetch notifications error:', err.response?.data, err);
+        setError(err.response?.data?.details || err.response?.data?.message || 'Failed to fetch notifications');
       } finally {
         setLoading(false);
       }
@@ -48,7 +48,6 @@ const Home = () => {
     window.location.href = '/';
   };
 
-  // Show only the latest 3 notifications initially, or all if "View All" is clicked
   const displayedNotifications = showAllNotifications ? notifications : notifications.slice(0, 3);
 
   return (
@@ -64,7 +63,6 @@ const Home = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           />
-          {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-6 text-sm md:text-base font-semibold items-center">
             <motion.div whileHover={{ scale: 1.1 }}>
               <Link to="/about" className="hover:text-indigo-200">About Us</Link>
@@ -123,7 +121,6 @@ const Home = () => {
               </>
             )}
           </nav>
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white focus:outline-none"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -137,7 +134,6 @@ const Home = () => {
             </svg>
           </button>
         </div>
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.nav
             className="md:hidden bg-indigo-600 text-white p-4"
@@ -178,9 +174,7 @@ const Home = () => {
         )}
       </header>
 
-      {/* Main Content */}
       <main className="pt-[60px]">
-        {/* Hero Section */}
         <section
           className="relative flex items-center justify-center h-screen bg-cover bg-center"
           style={{ backgroundImage: "url('/main.jpg')" }}
@@ -204,27 +198,24 @@ const Home = () => {
               The Right steps will always lead you to Success
             </motion.p>
             <a
-  href="https://forms.gle/VW1WKij6n1TcdE8j8"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <motion.button
-    className="px-6 py-3 md:px-8 md:py-4 bg-orange-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-500 text-lg"
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.9 }}
-  >
-    Enroll
-  </motion.button>
-</a>
-
+              href="https://forms.gle/VW1WKij6n1TcdE8j8"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <motion.button
+                className="px-6 py-3 md:px-8 md:py-4 bg-orange-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-500 text-lg"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                Enroll
+              </motion.button>
+            </a>
           </div>
         </section>
-       <AdmissionPopup />
-        {/* Notifications & Our Endeavours Side-by-Side */}
+        <AdmissionPopup />
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row gap-8">
-              {/* Notifications Sidebar */}
               <div className="lg:w-1/3 w-full">
                 <motion.h2
                   className="text-2xl md:text-3xl font-bold mb-6 text-gray-800"
@@ -266,12 +257,20 @@ const Home = () => {
                             <div className="flex-1">
                               <div className="flex items-center space-x-2">
                                 <i className="fa fa-bell text-orange-600 text-lg"></i>
-                                <h3 className="text-lg font-semibold text-red-600">
-                                  {notification.title || 'Notification'}
-                                </h3>
+                                <h3 className="text-lg font-semibold text-red-600">{notification.name}</h3>
                               </div>
                               <p className="text-sm text-gray-500 mt-1">Academics</p>
-                              <p className="text-gray-600 text-sm mt-1">{notification.text}</p>
+                              <p className="text-gray-600 text-sm mt-1">{notification.description}</p>
+                              {notification.link && (
+                                <a
+                                  href={notification.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline text-sm mt-1 block"
+                                >
+                                  {notification.link}
+                                </a>
+                              )}
                             </div>
                           </div>
                         </motion.div>
@@ -292,7 +291,6 @@ const Home = () => {
                   </>
                 )}
               </div>
-              {/* Our Endeavours */}
               <div className="lg:w-2/3 w-full">
                 <motion.h2
                   className="text-2xl md:text-3xl font-bold mb-6 text-gray-800"
@@ -319,7 +317,6 @@ const Home = () => {
                             className="w-full h-full object-contain"
                           />
                         </div>
-                       
                       </motion.div>
                     ))}
                   </div>
@@ -329,7 +326,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Facilities Section */}
         <section className="py-16 bg-gray-100">
           <div className="container mx-auto px-4">
             <motion.h2
@@ -361,7 +357,6 @@ const Home = () => {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="bg-indigo-600 text-white py-8">
         <div className="container mx-auto text-center">
           <p className="text-lg">© 2025 Ashoka Vidya Mandir. All rights reserved.</p>
