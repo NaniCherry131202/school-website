@@ -357,7 +357,7 @@ const Home = () => {
         </section>
       </main>
 
-      <footer className="bg-indigo-600 text-white py-8">
+      <footer className="bg-gradient-to-r from-yellow-300 to-orange-600 text-white py-8">
         <div className="container mx-auto text-center">
           <p className="text-lg">© 2025 Ashoka Vidya Mandir. All rights reserved.</p>
           <div className="flex justify-center space-x-6 mt-4">
