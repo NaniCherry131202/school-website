@@ -90,7 +90,7 @@ const Contact = () => {
                   <i className="fab fa-facebook-f"></i>
                 </a>
                 <a
-                  href="https://instagram.com"
+                  href="https://www.instagram.com/ashokavidyamandir/ "
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-indigo-600 hover:text-indigo-800"
@@ -98,7 +98,7 @@ const Contact = () => {
                   <i className="fab fa-instagram"></i>
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.youtube.com/channel/UC6iP6S2kb-bVFmATiqltubA"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-indigo-600 hover:text-indigo-800"

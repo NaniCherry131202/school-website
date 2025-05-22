@@ -362,36 +362,28 @@ const Home = () => {
           <p className="text-lg">© 2025 Ashoka Vidya Mandir. All rights reserved.</p>
           <div className="flex justify-center space-x-6 mt-4">
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=61576177360899"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-indigo-200"
             >
-              <i className="fa fa-facebook-f text-xl"></i>
+              <i className="fab fa-facebook-f text-xl"></i>
             </a>
             <a
-              href="https://twitter.com"
+              href="https://www.youtube.com/channel/UC6iP6S2kb-bVFmATiqltubA "
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-indigo-200"
             >
-              <i className="fa fa-twitter text-xl"></i>
+              <i className="fab fa-youtube text-xl"></i>
             </a>
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/ashokavidyamandir/ "
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-indigo-200"
             >
-              <i className="fa fa-instagram text-xl"></i>
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-indigo-200"
-            >
-              <i className="fa fa-linkedin text-xl"></i>
+              <i className="fab fa-instagram text-xl"></i>
             </a>
           </div>
         </div>
