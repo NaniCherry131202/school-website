@@ -203,15 +203,20 @@ const Home = () => {
             >
               The Right steps will always lead you to Success
             </motion.p>
-            <Link to="/admissions">
-              <motion.button
-                className="px-6 py-3 md:px-8 md:py-4 bg-orange-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-500 text-lg"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                Enroll
-              </motion.button>
-            </Link>
+            <a
+  href="https://forms.gle/VW1WKij6n1TcdE8j8"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <motion.button
+    className="px-6 py-3 md:px-8 md:py-4 bg-orange-600 text-white font-semibold rounded-full shadow-lg hover:bg-yellow-500 text-lg"
+    whileHover={{ scale: 1.1 }}
+    whileTap={{ scale: 0.9 }}
+  >
+    Enroll
+  </motion.button>
+</a>
+
           </div>
         </section>
        <AdmissionPopup />
