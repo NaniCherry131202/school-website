@@ -133,7 +133,7 @@ const About = () => {
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
             >
-              <h3 className="text-2xl sm:text-[28px] font-semibold text-indigo-600 mb-4">
+              <h3 className="text-2xl sm:text-[28px] font-semibold text-orange-600 mb-4">
                 Our Mission
               </h3>
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
@@ -148,7 +148,7 @@ const About = () => {
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
             >
-              <h3 className="text-2xl sm:text-[28px] font-semibold text-indigo-600 mb-4">
+              <h3 className="text-2xl sm:text-[28px] font-semibold text-orange-600 mb-4">
                 Our Vision
               </h3>
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
@@ -160,7 +160,7 @@ const About = () => {
 
           {/* Core Values Heading */}
           <motion.h1
-            className="text-center pt-12 pb-6 text-2xl sm:text-3xl font-semibold text-indigo-600"
+            className="text-center pt-12 pb-6 text-2xl sm:text-3xl font-semibold text-orange-600"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
