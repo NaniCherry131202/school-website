@@ -7,7 +7,6 @@ import path from 'path';
 import nodemailer from 'nodemailer';
 
 const router = express.Router(); // Initialize the router
-
 // In-memory store for OTPs
 const otpStore = new Map();
 

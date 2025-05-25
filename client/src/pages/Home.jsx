@@ -20,7 +20,6 @@ const config = {
 const NavLinks = ({ role, user, handleLogout, onLinkClick, isMobile }) => {
   const links = [
     { to: '/about', label: 'About Us' },
-    { to: '/academics', label: 'Academics' },
     { href: config.admissionForm, label: 'Admissions', external: true },
     { to: '/contact', label: 'Contact' },
     ...(role === 'student' ? [{ to: '/student', label: 'Dashboard' }] : []),
