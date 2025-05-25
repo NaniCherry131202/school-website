@@ -12,14 +12,14 @@ function Register() {
   const [rollNo, setRollNo] = useState("");
   const [teacherId, setTeacherId] = useState("");
   const [profilePic, setProfilePic] = useState(null);
-  const [role, setRole] = useState("student");
+  const [role, setRole] = useState("visit"); // Default role set to "visit"
   const [classLevel, setClassLevel] = useState("Nursery");
   const [otp, setOtp] = useState("");
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'; // Fallback for local development
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -107,7 +107,7 @@ function Register() {
           setRollNo("");
           setTeacherId("");
           setProfilePic(null);
-          setRole("student");
+          setRole("visit");
           setClassLevel("Nursery");
           setOtp("");
           setIsOtpSent(false);
@@ -128,10 +128,10 @@ function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-yellow-100">
       <ToastContainer position="top-right" autoClose={3000} />
       <motion.div
-        className="p-8 bg-white rounded-lg shadow-lg w-full max-w-md"
+        className="p-8 bg-yellow-50 rounded-lg shadow-lg w-full max-w-md"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -141,71 +141,71 @@ function Register() {
           alt="Ashoka Vidya Mandir Logo"
           className="w-24 mx-auto mb-6"
         />
-        <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
+        <h2 className="text-2xl font-bold text-center mb-6 text-orange-700">Register</h2>
         <form onSubmit={handleRegister}>
           {!isOtpSent ? (
             <>
               <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
+                <label className="block text-orange-700">Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Email</label>
+                <label className="block text-orange-700">Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   required
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Password</label>
+                <label className="block text-orange-700">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   required
                 />
               </div>
               <div className="mb-6">
-                <label className="block text-gray-700">Role</label>
+                <label className="block text-orange-700">Role</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   required
                 >
+                  <option value="visit">Visit</option>
                   <option value="student">Student</option>
                   <option value="teacher">Teacher</option>
-                  <option value="visit">Visit</option>
                 </select>
               </div>
               {role === "student" && (
                 <>
                   <div className="mb-4">
-                    <label className="block text-gray-700">Roll No</label>
+                    <label className="block text-orange-700">Roll No</label>
                     <input
                       type="text"
                       value={rollNo}
                       onChange={(e) => setRollNo(e.target.value)}
-                      className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       required
                     />
                   </div>
                   <div className="mb-6">
-                    <label className="block text-gray-700">Class</label>
+                    <label className="block text-orange-700">Class</label>
                     <select
                       value={classLevel}
                       onChange={(e) => setClassLevel(e.target.value)}
-                      className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       required
                     >
                       <option value="Nursery">Nursery</option>
@@ -227,44 +227,44 @@ function Register() {
               )}
               {role === "teacher" && (
                 <div className="mb-4">
-                  <label className="block text-gray-700">Teacher ID</label>
+                  <label className="block text-orange-700">Teacher ID</label>
                   <input
                     type="text"
                     value={teacherId}
                     onChange={(e) => setTeacherId(e.target.value)}
-                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
                   />
                 </div>
               )}
               {role !== "visit" && (
                 <div className="mb-4">
-                  <label className="block text-gray-700">Profile Picture</label>
+                  <label className="block text-orange-700">Profile Picture</label>
                   <input
                     id="profilePic"
                     type="file"
                     accept="image/*"
                     onChange={(e) => setProfilePic(e.target.files[0])}
-                    className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
               )}
             </>
           ) : (
             <div className="mb-4">
-              <label className="block text-gray-700">Enter OTP</label>
+              <label className="block text-orange-700">Enter OTP</label>
               <input
                 type="text"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="w-full p-2 border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 required
               />
             </div>
           )}
           <motion.button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400"
+            className="w-full py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:bg-orange-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             disabled={isLoading}
@@ -272,9 +272,9 @@ function Register() {
             {isLoading ? "Processing..." : isOtpSent ? "Verify OTP" : "Send OTP"}
           </motion.button>
         </form>
-        <p className="text-center mt-4">
+        <p className="text-center mt-4 text-orange-700">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-orange-600 hover:text-orange-700">
             Login here
           </Link>
         </p>

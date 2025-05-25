@@ -1,9 +1,8 @@
-// routes/admissions.js
 import express from 'express';
 import multer from 'multer';
 import cloudinary from '../config/cloudinary.js';
 import Admission from '../models/Admission.js';
-import jwt from 'jsonwebtoken'; // For token verification
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -18,7 +17,7 @@ const verifyAdmin = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Ensure JWT_SECRET is set in your environment
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded.role !== 'admin') {
       return res.status(403).json({ message: 'Access denied: Admins only' });
     }
@@ -34,6 +33,7 @@ router.post(
   upload.fields([
     { name: 'photo', maxCount: 1 },
     { name: 'aadhar', maxCount: 1 },
+    { name: 'birthCertificate', maxCount: 1 }, // New field
     { name: 'signature', maxCount: 1 },
   ]),
   async (req, res) => {
@@ -77,16 +77,17 @@ router.post(
         !parsedAdmissionDetails.academicYear ||
         !parsedParentGuardian.name ||
         !req.files.photo ||
-        !req.files.aadhar
+        !req.files.aadhar ||
+        !req.files.birthCertificate // Require birthCertificate
       ) {
-        return res.status(400).json({ message: 'All required fields must be provided.' });
+        return res.status(400).json({ message: 'All required fields and files must be provided.' });
       }
 
       const uploadFile = (file, folder) =>
         new Promise((resolve, reject) => {
           const resourceType = file.mimetype === 'application/pdf' ? 'raw' : 'image';
           const stream = cloudinary.uploader.upload_stream(
-            { folder: `admissions/${folder}`, resource_type: resourceType, access_mode: 'authenticated' }, // Set to authenticated for Aadhaar
+            { folder: `admissions/${folder}`, resource_type: resourceType, access_mode: 'authenticated' },
             (error, result) => {
               if (error) reject(error);
               else resolve(result.secure_url);
@@ -97,6 +98,7 @@ router.post(
 
       const photoUrl = await uploadFile(req.files.photo[0], 'photos');
       const aadharUrl = await uploadFile(req.files.aadhar[0], 'aadhar');
+      const birthCertificateUrl = await uploadFile(req.files.birthCertificate[0], 'birthCertificates'); // Upload new file
       const signatureUrl = req.files.signature
         ? await uploadFile(req.files.signature[0], 'signatures')
         : null;
@@ -115,6 +117,7 @@ router.post(
         },
         photo: photoUrl,
         aadhar: aadharUrl,
+        birthCertificate: birthCertificateUrl, // Store new file URL
       });
 
       const savedAdmission = await newAdmission.save();
@@ -133,15 +136,22 @@ router.get('/', verifyAdmin, async (req, res) => {
   try {
     const admissions = await Admission.find();
     const signedAdmissions = admissions.map(admission => {
-      // Generate signed URL for Aadhaar PDF (valid for 1 hour)
+      // Generate signed URL for Aadhaar PDF
       const signedAadharUrl = cloudinary.utils.private_download_url(admission.aadhar, 'pdf', {
         resource_type: 'raw',
         attachment: false,
-        expires_at: Math.floor(Date.now() / 1000) + 3600, // Expires in 1 hour
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
+      });
+      // Generate signed URL for Birth Certificate image
+      const signedBirthCertificateUrl = cloudinary.utils.private_download_url(admission.birthCertificate, 'jpg', {
+        resource_type: 'image',
+        attachment: false,
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
       });
       return {
         ...admission._doc,
-        aadhar: signedAadharUrl, // Replace Aadhaar URL with signed URL
+        aadhar: signedAadharUrl,
+        birthCertificate: signedBirthCertificateUrl, // Include signed URL
       };
     });
     res.status(200).json(signedAdmissions);

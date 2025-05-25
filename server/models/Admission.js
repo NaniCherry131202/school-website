@@ -1,4 +1,3 @@
-// models/Admission.js
 import mongoose from 'mongoose';
 
 const PreviousSchoolSchema = new mongoose.Schema({
@@ -13,9 +12,9 @@ const AdmissionSchema = new mongoose.Schema({
   formNo: {
     type: String,
     trim: true,
-    default: () => `FORM-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Auto-generate Form Number
+    default: () => `FORM-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
   },
-  admissionNo: { type: String, trim: true, default: null }, // Set to null, to be assigned later
+  admissionNo: { type: String, trim: true, default: null },
   student: {
     name: { type: String, required: true, trim: true },
     dob: { type: Date, required: true },
@@ -66,6 +65,7 @@ const AdmissionSchema = new mongoose.Schema({
   },
   photo: { type: String, required: true },
   aadhar: { type: String, required: true },
+  birthCertificate: { type: String, required: true }, // New field for Date of Birth Certificate
   createdAt: { type: Date, default: Date.now },
 });
 

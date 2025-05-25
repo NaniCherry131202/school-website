@@ -22,3 +22,25 @@ img {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.Toastify__toast--success {
+  background-color: #f97316 !important; /* orange-500 */
+  color: white !important;
+}
+.Toastify__toast--error {
+  background-color: #dc2626 !important; /* red-600 */
+  color: white !important;
+}
+input[type="file"] {
+  color: #c2410c; /* orange-700 */
+}
+input[type="file"]::-webkit-file-upload-button {
+  background-color: #f97316; /* orange-500 */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: #ea580c; /* orange-600 */
+}
