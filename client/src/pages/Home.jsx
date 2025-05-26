@@ -119,11 +119,19 @@ const Home = () => {
           <motion.img
             src="/logo.png"
             alt="Ashoka Vidya Mandir Logo"
-            className="w-16 sm:w-20 md:w-24 lg:w-28 max-w-none"
+            className="w-12 sm:w-16 md:w-20 lg:w-24 max-w-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           />
+          <motion.h1
+            className="text-lg sm:text-xl md:hidden font-bold absolute left-1/2 transform -translate-x-1/2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            Ashoka Vidya Mandir
+          </motion.h1>
           <nav className="hidden md:flex items-center">
             <NavLinks
               role={role}
@@ -368,7 +376,7 @@ const Home = () => {
         <section className="py-12 sm:py-16 bg-gray-100">
           <div className="container mx-auto px-4 sm:px-6">
             <motion.h2
-              className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 sm:mb-12 text-center text-gray-800"
+              className="text-2 SLCsm:text-3xl md:text-4xl font-bold mb-8 sm:mb-12 text-center text-gray-800"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
